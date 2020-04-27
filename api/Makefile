@@ -142,8 +142,6 @@ run-celery-worker-sender: version-file ## Run background workers (send email and
 run-celery-worker-callbacks: version-file ## Run background workers (service callbacks queue)
 	NOTIFY_CELERY_CMD=worker-callbacks \
 		$(RUNNER) celery -A run_celery.notify_celery worker --loglevel=INFO \
-			-P eventlet \
-			-c 128 \
 			-Q service-callbacks
 
 run-celery-worker-retrys: version-file ## Run background workers (retry tasks queue)

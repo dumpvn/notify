@@ -159,6 +159,9 @@ class Config(object):
 
     NOTIFICATION_QUEUE_PREFIX = os.getenv('NOTIFICATION_QUEUE_PREFIX', '')
     BROKER_URL = os.getenv('BROKER_URL', REDIS_URL)
+    BROKER_USE_SSL = {
+        'ssl_cert_reqs': ssl.CERT_REQUIRED,
+    }
 
     CELERY_ENABLE_UTC = True
     CELERY_TIMEZONE = 'Australia/Sydney'

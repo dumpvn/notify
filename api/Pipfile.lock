@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "8ed77101f5cbc21b05ff3ea1342e19e889f108e3a554b5044548c35ff71a8ea0"
+            "sha256": "da5bb72d46a1934577635d811410533788ad05ead24f3cb3bc465554d84b18e0"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -226,6 +226,7 @@
                 "sha256:4c8ab42c51bff55204fef43cff32616558bedbc7538d876bb6a96ce820c7f9ed",
                 "sha256:955f2cf538829bfcb7b3aa885ace40e8ae5965dcd5b876c384d0c5869702db1d"
             ],
+            "index": "pypi",
             "version": "==0.25.2"
         },
         "flask": {
@@ -307,6 +308,7 @@
                 "sha256:e7d23d5f32c9db6ae49c4b58585618dcafd6ad0babae251c9c8297afebc4744b",
                 "sha256:ee39caf14d66e619709cdfe3962bc68a234518e43ea8c811c0d67a864bc7c196"
             ],
+            "index": "pypi",
             "version": "==20.4.0"
         },
         "greenlet": {
@@ -687,10 +689,10 @@
         },
         "twilio": {
             "hashes": [
-                "sha256:620d7c9ef9e09c67a690ad02fdf76f502e5115227a56369e5f235d8a6b717c69"
+                "sha256:7ef6ad19251fee6a41f1184e97b4fcb62f4a8c0e6f4b78797e40e9c92aed006d"
             ],
             "index": "pypi",
-            "version": "==6.38.1"
+            "version": "==6.39.0"
         },
         "urllib3": {
             "hashes": [

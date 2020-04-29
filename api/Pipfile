@@ -38,6 +38,8 @@ authlib = "==0.13"
 # For now we pin it to some commit in master that seems to work.
 cryptography = {git = "https://github.com/pyca/cryptography.git",ref = "9dc710e65ae08de8ad510a985ad1258aa76a26b3"}
 cachelib = "*"
+eventlet = "*"
+gevent = "*"
 
 [dev-packages]
 bandit = "==1.5.1"

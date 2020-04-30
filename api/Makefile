@@ -170,7 +170,7 @@ pipenv-requirements.txt: Pipfile.lock
 build: vendor
 
 vendor: pipenv-requirements.txt
-	$(RUNNER) pip download -d $@ -r $<
+	$(RUNNER) pip download -d $@ --no-binary=:none: -r $<
 
 native-vendor:
 	mkdir -p $@

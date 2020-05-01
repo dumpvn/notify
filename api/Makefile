@@ -142,7 +142,7 @@ run-celery-worker-sender: version-file ## Run background workers (send email and
 run-celery-worker-callbacks: version-file ## Run background workers (service callbacks queue)
 	NOTIFY_CELERY_CMD=worker-callbacks \
 		$(RUNNER) celery -A run_celery.notify_celery worker --loglevel=INFO \
-			-P gevent \
+			-P eventlet \
 			-c 128 \
 			-Q service-callbacks
 
@@ -170,7 +170,7 @@ pipenv-requirements.txt: Pipfile.lock
 build: vendor
 
 vendor: pipenv-requirements.txt
-	$(RUNNER) pip download -d $@ --no-binary=:none: -r $<
+	$(RUNNER) pip download -d $@ -r $<
 
 native-vendor:
 	mkdir -p $@

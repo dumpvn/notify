@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "da5bb72d46a1934577635d811410533788ad05ead24f3cb3bc465554d84b18e0"
+            "sha256": "02dffbab902407a9c92783453e6a650089cdaa69927cf68978048466828a2760"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -308,7 +308,6 @@
                 "sha256:e7d23d5f32c9db6ae49c4b58585618dcafd6ad0babae251c9c8297afebc4744b",
                 "sha256:ee39caf14d66e619709cdfe3962bc68a234518e43ea8c811c0d67a864bc7c196"
             ],
-            "index": "pypi",
             "version": "==20.4.0"
         },
         "greenlet": {
@@ -562,6 +561,14 @@
             ],
             "index": "pypi",
             "version": "==1.6.1"
+        },
+        "pyopenssl": {
+            "hashes": [
+                "sha256:621880965a720b8ece2f1b2f54ea2071966ab00e2970ad2ce11d596102063504",
+                "sha256:9a24494b2602aaf402be5c9e30a0b82d4a5c67528fe8fb475e3f3bc00dd69507"
+            ],
+            "index": "pypi",
+            "version": "==19.1.0"
         },
         "pypdf2": {
             "hashes": [

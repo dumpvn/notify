@@ -98,6 +98,7 @@ build: vendor
 
 vendor: vendor-requirements.txt
 	$(RUNNER) pip download -d $@ -r $<
+	$(MAKE) -c ../utils dist
 	cp ../utils/dist/* $@/
 
 requirements.txt: poetry-requirements.txt

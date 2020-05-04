@@ -1,5 +1,6 @@
 PIPENV ?= pipenv
-RUNNER ?= $(PIPENV) run
+POETRY ?= poetry
+RUNNER ?= $(POETRY) run
 
 # A help target including self-documenting targets (see the awk statement)
 define HELP_TEXT
@@ -16,13 +17,15 @@ help: ## List common commands and their usage
 		{printf "\033[36m%-30s\033[0m  %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 install: ## Setup virtualenv and install python dependencies
-	$(PIPENV) install
+	$(POETRY) install
 
 install-dev: ## Setup everything in dev mode for testing
-	$(PIPENV) install --dev
+	$(MAKE) install
 
-build:
-	$(RUNNER) python setup.py sdist
+dist:
+	$(POETRY) build
+
+build: dist
 
 tests:
 	$(RUNNER) python setup.py test

@@ -1,5 +1,6 @@
 PIPENV ?= pipenv
-RUNNER ?= $(PIPENV) run
+POETRY ?= poetry
+RUNNER ?= $(POETRY) run
 YARN   ?= yarn
 PORT   ?= 6012
 WORKERS?= 4
@@ -31,6 +32,9 @@ version-file: app/version.py
 
 Pipfile Pipfile.lock:
 	$(PIPENV) install
+
+poetry.lock pyproject.toml:
+	$(POETRY) install
 
 install-frontend:
 	$(YARN) install
@@ -84,12 +88,19 @@ run-gunicorn: version-file ## Run a production server
 pipenv-requirements.txt: Pipfile.lock
 	$(PIPENV) lock -r > $@
 
+poetry-requirements.txt: poetry.lock
+	$(POETRY) export --without-hashes -f requirements.txt > $@
+
+vendor-requirements.txt: poetry-requirements.txt
+	cat $< | $(RUNNER) python scripts/fixup-vendor-requirements.py > $@
+
 build: vendor
 
-vendor: pipenv-requirements.txt
+vendor: vendor-requirements.txt
 	$(RUNNER) pip download -d $@ -r $<
+	cp ../utils/dist/* $@/
 
-requirements.txt: pipenv-requirements.txt
+requirements.txt: poetry-requirements.txt
 	cat $< | $(RUNNER) python scripts/fixup-requirements.py > $@
 
 native-vendor:

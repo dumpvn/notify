@@ -54,10 +54,10 @@ build-frontend-prod: install-frontend ## Setup and build css
 	$(MAKE) build-frontend
 
 install: install-frontend version-file ## Setup virtualenv, install frontend deps, install python deps
-	$(PIPENV) install
+	$(POETRY) install
 
 install-dev: install-frontend version-file ## Setup everything in dev mode
-	$(PIPENV) install --dev
+	$(MAKE) install
 
 test: version-file ## Run linter, python tests, node tests
 	$(RUNNER) flake8 .

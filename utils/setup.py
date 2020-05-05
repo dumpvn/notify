@@ -26,7 +26,6 @@ install_requires =  [
     'monotonic>=1.5,<2.0',
     'orderedset>=2.0,<3.0',
     'phonenumbers>=8.12,<9.0',
-    'poetry>=1.0.5,<2.0.0',
     'pypdf2>=1.26,<2.0',
     'python-dateutil>=2.8,<3.0',
     'python-json-logger>=0.1.11,<0.2.0',

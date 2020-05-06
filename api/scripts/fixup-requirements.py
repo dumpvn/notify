@@ -3,9 +3,12 @@
 import os
 import sys
 
+def fixup_target(target):
+    if 'git+' in target:
+        return target
 
-def get_eggname(directory):
-    return {'utils': 'notifications-utils'}.get(directory)
+    if '../utils' in target:
+        return 'notifications-utils'
 
 
 if __name__ == '__main__':
@@ -14,8 +17,8 @@ if __name__ == '__main__':
             sys.stdout.write(line)
             continue
 
-        path = line[2:].strip()
-        directory = os.path.basename(os.path.normpath(path))
-        egg = get_eggname(directory)
-        if egg:
-            sys.stdout.write('%s\n' % egg)
+        target = line[2:].strip()
+        replaced_target = fixup_target(target)
+        if replaced_target:
+            sys.stdout.write('%s\n' % replaced_target)
+

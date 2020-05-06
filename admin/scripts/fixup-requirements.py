@@ -3,10 +3,6 @@
 import os
 import sys
 
-
-def get_eggname(directory):
-    return {'utils': 'notifications-utils'}.get(directory)
-
 def fixup_target(target):
     if 'git+' in target:
         return target

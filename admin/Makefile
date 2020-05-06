@@ -1,5 +1,6 @@
 PIPENV ?= pipenv
-RUNNER ?= $(PIPENV) run
+POETRY ?= poetry
+RUNNER ?= $(POETRY) run
 YARN   ?= yarn
 PORT   ?= 6012
 WORKERS?= 4
@@ -32,6 +33,9 @@ version-file: app/version.py
 Pipfile Pipfile.lock:
 	$(PIPENV) install
 
+poetry.lock pyproject.toml:
+	$(POETRY) install
+
 install-frontend:
 	$(YARN) install
 
@@ -50,10 +54,10 @@ build-frontend-prod: install-frontend ## Setup and build css
 	$(MAKE) build-frontend
 
 install: install-frontend version-file ## Setup virtualenv, install frontend deps, install python deps
-	$(PIPENV) install
+	$(POETRY) install --no-dev
 
 install-dev: install-frontend version-file ## Setup everything in dev mode
-	$(PIPENV) install --dev
+	$(POETRY) install
 
 test: version-file ## Run linter, python tests, node tests
 	$(RUNNER) flake8 .
@@ -84,18 +88,21 @@ run-gunicorn: version-file ## Run a production server
 pipenv-requirements.txt: Pipfile.lock
 	$(PIPENV) lock -r > $@
 
+poetry-requirements.txt: poetry.lock
+	$(POETRY) export --without-hashes -f requirements.txt > $@
+
 build: vendor
 
-vendor: pipenv-requirements.txt
+vendor: poetry-requirements.txt
 	$(RUNNER) pip download -d $@ -r $<
 
-requirements.txt: pipenv-requirements.txt
+requirements.txt: poetry-requirements.txt
 	cat $< | $(RUNNER) python scripts/fixup-requirements.py > $@
 
 native-vendor:
 	mkdir -p $@
 
-build-linux-wheels: pipenv-requirements.txt native-vendor
+build-linux-wheels: poetry-requirements.txt native-vendor
 	cat $< | $(RUNNER) python scripts/fixup-requirements.py --ignore | docker run\
 		-i --rm\
 		-v $(shell pwd)/build-linux-wheels.sh:/build-linux-wheels.sh\

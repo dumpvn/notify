@@ -31,6 +31,7 @@ saplivelink365 = {git = "https://github.com/govau/sap-live-link-365-client-pytho
 validatesns = "^0.1.1"
 authlib = "^0.14.2"
 cachelib = "^0.1"
+sentry-sdk = {extras = ["flask"], version = "^0.14.3"}
 
 [tool.poetry.dev-dependencies]
 bandit = "^1.6.2"
@@ -47,6 +48,7 @@ rfc3987 = "^1.3.8"
 strict-rfc3339 = "^0.7"
 pyyaml = "^5.3.1"
 urllib3-mock = "^0.3.3"
+moto = "^1.3.14"
 
 [build-system]
 requires = ["poetry>=0.12"]

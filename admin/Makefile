@@ -112,10 +112,10 @@ build-linux-wheels: poetry-requirements.txt native-vendor
 manifest-vars-%.yml:
 	echo "stg: $*" > $@
 
-deploy:
+deploy: vendor requirements.txt ## Deploy admin to cloudfoundry
 	$(CF) zero-downtime-push $(APP) -f manifest.yml
 
-deploy-dev: manifest-vars-$(STG).yml
+deploy-dev: manifest-vars-$(STG).yml vendor requirements.txt ## Deploy admin to cloudfoundry
 	$(CF) push $(APP)-$(STG) -f manifest-dev.yml --vars-file $<
 
 clean:

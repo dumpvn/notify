@@ -141,7 +141,7 @@ poetry-requirements.txt: poetry.lock
 
 build: vendor
 
-vendor: poetry-requirements.txt
+vendor: poetry-requirements.txt requirements.txt
 	$(RUNNER) pip download -d $@ -r $<
 
 native-vendor:

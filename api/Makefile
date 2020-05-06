@@ -1,6 +1,7 @@
 GUNICORN ?= gunicorn
 PIPENV ?= pipenv
-RUNNER ?= $(PIPENV) run
+POETRY ?= poetry
+RUNNER ?= $(POETRY) run
 PORT   ?= 6011
 WORKERS?= 4
 CF     ?= cf
@@ -15,9 +16,6 @@ APP_VERSION_FILE = app/version.py
 GIT_COMMIT ?= $(shell git rev-parse HEAD)
 BUILD_NUMBER ?= 0
 BUILD_URL ?=
-
-DOCKER_CONTAINER_PREFIX = ${USER}-
-DOCKER_TEST_DB_PORT ?= 5420
 
 APP_DIRS  = $(shell find tests/app/* -maxdepth 1 -type d)
 APP_TESTS = $(APP_DIRS:tests/app/%=test-%)
@@ -46,20 +44,14 @@ ${APP_VERSION_FILE}:
 
 version-file: ${APP_VERSION_FILE}
 
-Pipfile Pipfile.lock:
-	$(PIPENV) install
-
-# cryptography fails to vendor correctly in CI if we pin it to 2.8. The error is:
-# "Could not find a version that satisfies the requirement cryptography==2.8"
-# For now we pin it to some commit in master that seems to work. However, this
-# means that for macOS, installs fail unless we specify some flags.
-# See https://github.com/pyca/cryptography/blob/master/docs/development/getting-started.rst#openssl-on-macos
+poetry.lock pyproject.toml:
+	$(POETRY) install
 
 install: version-file ## Setup virtualenv and install python dependencies
-	$(PIPENV) install
+	$(POETRY) install --no-dev
 
 install-dev: ## Setup everything in dev mode for testing
-	$(PIPENV) install --dev
+	$(POETRY) install
 
 setup-db: version-file ## Run database migrations
 	$(RUNNER) flask db upgrade
@@ -89,26 +81,6 @@ $(DAO_TESTS): test-dao-%: version-file
 
 test-roots: version-file
 	$(RUNNER) pytest -n4 $(PYTEST_ARGS) tests/app/*.py
-
-wait-for-docker-test-db:
-	@number=1 ; while [[ $$number -le 10 ]] ; do \
-		nc -z localhost $(DOCKER_TEST_DB_PORT) && echo Success && exit 0 ; \
-		echo -n . ; \
-		sleep 1 ; \
-        ((number = number + 1)) ; \
-    done ; \
-	echo Failed waiting for Postgres && exit 1
-
-create-docker-test-db:
-	docker rm -f $(DOCKER_CONTAINER_PREFIX)notify-test-db 2> /dev/null || true
-	@docker run -d \
-		--name "$(DOCKER_CONTAINER_PREFIX)notify-test-db" \
-		-p $(DOCKER_TEST_DB_PORT):5432 \
-		-e POSTGRES_PASSWORD="" \
-		-e POSTGRES_DB="test_notification_api" \
-		postgres:9.6
-
-	$(MAKE) wait-for-docker-test-db;
 
 run: version-file ## Run a development server (reloading)
 	$(RUNNER) flask run -p $(PORT)
@@ -164,9 +136,12 @@ run-ngrok:
 pipenv-requirements.txt: Pipfile.lock
 	$(PIPENV) lock -r > $@
 
+poetry-requirements.txt: poetry.lock
+	$(POETRY) export --without-hashes -f requirements.txt > $@
+
 build: vendor
 
-vendor: pipenv-requirements.txt
+vendor: poetry-requirements.txt
 	$(RUNNER) pip download -d $@ -r $<
 
 native-vendor:
@@ -178,7 +153,7 @@ build-linux-wheels: pipenv-requirements.txt native-vendor
 		-v $(shell pwd)/build-linux-wheels.sh:/build-linux-wheels.sh\
 		quay.io/pypa/manylinux1_x86_64 bash /build-linux-wheels.sh | tar -C native-vendor -x
 
-requirements.txt: pipenv-requirements.txt
+requirements.txt: poetry-requirements.txt
 	cat $< | $(RUNNER) python scripts/fixup-requirements.py > $@
 
 run-production: setup-db ## Apply migrations and run production server
@@ -192,7 +167,6 @@ deploy: vendor requirements.txt ## Deploy prod application
 
 deploy-dev: manifest-vars-$(STG).yml vendor requirements.txt
 	$(CF) push $(APP)-$(STG) -f manifest-dev.yml --vars-file $<
-
 	$(MAKE) create-sap-oauth2-client
 
 deploy-celery-worker-default:

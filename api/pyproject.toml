@@ -7,6 +7,30 @@ authors = ["Your Name <you@example.com>"]
 [tool.poetry.dependencies]
 python = "^3.7"
 notifications-utils = {path = "../utils"}
+cffi = "^1.14.0"
+celery = {extras = ["redis"], version = "^4.4.2"}
+Flask-Bcrypt = "^0.7.1"
+Flask-Migrate = "^2.5.3"
+Flask-SQLAlchemy = "^2.4.1"
+flask-marshmallow = "^0.12.0"
+Flask = "^1.1.2"
+click-datetime = "^0.2"
+gunicorn = "^20.0.4"
+iso8601 = "^0.1.12"
+jsonschema = "^3.2.0"
+itsdangerous = "^1.1.0"
+PyJWT = "^1.7.1"
+SQLAlchemy = "^1.3.16"
+marshmallow-sqlalchemy = "^0.23.0"
+marshmallow = "^3.5.2"
+monotonic = "^1.5"
+telstra-messaging = {git = "https://github.com/Telstra/MessagingAPI-SDK-python", rev = "1.0.6.1"}
+notifications-python-client = "^4.8"
+twilio = "^6.39.0"
+saplivelink365 = {git = "https://github.com/govau/sap-live-link-365-client-python", rev = "v0.0.3"}
+validatesns = "^0.1.1"
+authlib = "^0.14.2"
+cachelib = "^0.1"
 
 [tool.poetry.dev-dependencies]
 

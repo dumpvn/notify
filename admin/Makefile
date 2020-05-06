@@ -94,6 +94,7 @@ poetry-requirements.txt: poetry.lock
 build: vendor
 
 vendor: poetry-requirements.txt
+	cat poetry-requirements.txt
 	$(RUNNER) pip download -d $@ -r $<
 
 requirements.txt: poetry-requirements.txt
@@ -113,6 +114,7 @@ manifest-vars-%.yml:
 	echo "stg: $*" > $@
 
 deploy: vendor requirements.txt ## Deploy admin to cloudfoundry
+	cat poetry-requirements.txt
 	cat requirements.txt
 	$(CF) zero-downtime-push $(APP) -f manifest.yml
 

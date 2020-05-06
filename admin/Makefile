@@ -113,9 +113,11 @@ manifest-vars-%.yml:
 	echo "stg: $*" > $@
 
 deploy: vendor requirements.txt ## Deploy admin to cloudfoundry
+	cat requirements.txt
 	$(CF) zero-downtime-push $(APP) -f manifest.yml
 
 deploy-dev: manifest-vars-$(STG).yml vendor requirements.txt ## Deploy admin to cloudfoundry
+	cat requirements.txt
 	$(CF) push $(APP)-$(STG) -f manifest-dev.yml --vars-file $<
 
 clean:

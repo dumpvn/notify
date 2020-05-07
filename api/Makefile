@@ -163,6 +163,7 @@ manifest-vars-%.yml:
 	echo "stg: $*" > $@
 
 deploy: vendor requirements.txt ## Deploy prod application
+	ls vendor
 	$(CF) zero-downtime-push $(APP) -f manifest.yml
 
 deploy-dev: manifest-vars-$(STG).yml vendor requirements.txt

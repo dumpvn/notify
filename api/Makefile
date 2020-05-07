@@ -142,7 +142,7 @@ poetry-requirements.txt: poetry.lock
 build: vendor
 
 vendor: poetry-requirements.txt requirements.txt
-	$(RUNNER) pip download -d $@ -r $<
+	$(RUNNER) pip download --no-binary=:all: -d $@ -r $<
 
 native-vendor:
 	mkdir -p $@

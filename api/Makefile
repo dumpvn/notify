@@ -167,6 +167,7 @@ deploy: vendor requirements.txt ## Deploy prod application
 	$(CF) zero-downtime-push $(APP) -f manifest.yml
 
 deploy-dev: manifest-vars-$(STG).yml vendor requirements.txt
+	ls vendor
 	$(CF) push $(APP)-$(STG) -f manifest-dev.yml --vars-file $<
 	$(MAKE) create-sap-oauth2-client
 

@@ -51,8 +51,7 @@ def check_placeholders(template_object):
         message = 'Missing personalisation: {}'.format(", ".join(template_object.missing_data))
         raise BadRequestError(fields=[{'template': message}], message=message)
 
-
-def persist_notification(
+def prepare_notification(
     *,
     template_id,
     template_version,
@@ -121,20 +120,6 @@ def persist_notification(
     elif notification_type == EMAIL_TYPE:
         notification.normalised_to = format_email_address(notification.to)
 
-    # if simulated create a Notification model to return but do not persist the Notification to the dB
-    if not simulated:
-        dao_create_notification(notification)
-        if key_type != KEY_TYPE_TEST:
-            if redis_store.get(redis.daily_limit_cache_key(service.id)):
-                redis_store.incr(redis.daily_limit_cache_key(service.id))
-            if redis_store.get_all_from_hash(cache_key_for_service_template_counter(service.id)):
-                redis_store.increment_hash_value(cache_key_for_service_template_counter(service.id), template_id)
-
-            increment_template_usage_cache(service.id, template_id, notification_created_at)
-
-        current_app.logger.info(
-            "{} {} created at {}".format(notification_type, notification_id, notification_created_at)
-        )
     return notification
 
 

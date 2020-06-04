@@ -108,6 +108,16 @@ def dao_get_last_template_usage(template_id, template_type):
     ).first()
 
 
+def _prepare_notification(notification):
+    if not notification.id:
+        # need to populate defaulted fields before we create the notification history object
+        notification.id = create_uuid()
+    if not notification.status:
+        notification.status = NOTIFICATION_CREATED
+
+    return notification
+
+
 @statsd(namespace="dao")
 @transactional
 def dao_create_notification(notification):
@@ -120,6 +130,19 @@ def dao_create_notification(notification):
     db.session.add(notification)
     if _should_record_notification_in_history_table(notification):
         db.session.add(NotificationHistory.from_original(notification))
+
+@statsd(namespace="dao")
+@transactional
+def dao_create_notifications(notifications):
+    def records_to_persist(notifications):
+        for _notification in notifications:
+            notification = _prepare_notification(_notification)
+            yield notification
+
+            if _should_record_notification_in_history_table(notification):
+                yield NotificationHistory.from_original(notification)
+
+    db.session.bulk_save_objects(records_to_persist(notifications))
 
 
 def _should_record_notification_in_history_table(notification):
